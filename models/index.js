@@ -1,4 +1,3 @@
 module.exports = {
-	Game: require("./Game"),
-	Note: require("./Note")
+  Article: require("./Article")
 };

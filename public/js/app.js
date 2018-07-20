@@ -1,60 +1,46 @@
-$(document).on("click", "#add-notes", function () {
+$(document).on("click", "#add", function () {
 
-
-
-	var thisId = $(this).attr("data-id");
-
-	$("#notes" + thisId).empty();
-
+	var Id = $(this).attr("data-id");
+	$("#notes" + Id).empty();
 	$.ajax({
-		method: "GET",
-		url: "/Games/" + thisId
-	})
+			method: "GET",
+			url: "/Articles/" + Id
+		})
 		.then(function (data) {
 			console.log(data);
 			$("#notes" + data._id).append("<h2>" + data.title + "</h2>");
 			$("#notes" + data._id).append("<label for='title'>Subject</label><input id='titleinput' name='title' class='form-control'>");
 			$("#notes" + data._id).append("<label for='body'>Note</label><textarea id='bodyinput' name='body' class='form-control'></textarea><br/>");
 			$("#notes" + data._id).append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
-
-			if (data.note) {
-				$("#titleinput").val(data.note.title);
-				$("#bodyinput").val(data.note.body);
-			}
 		});
 });
 
-$(document).on("click", "#delete-notes", function () {
-
-
-	var thisId = $(this).attr("data-id");
-	$("#notes" + thisId).empty();
+$(document).on("click", "#delete", function () {
+	var Id = $(this).attr("data-id");
+	$("#notes" + Id).empty();
 	$.ajax({
-		method: "PUT",
-		url: "/RemoveGameNotes/" + thisId
-	})
+			method: "PUT",
+			url: "/RemoveArticleNotes/" + Id
+		})
 		.then(function (data) {
 			console.log(data);
 		});
 });
 
 $(document).on("click", "#savenote", function () {
-	var thisId = $(this).attr("data-id");
-
+	var Id = $(this).attr("data-id");
 	$.ajax({
-		method: "POST",
-		url: "/Games/" + thisId,
-		data: {
-			title: $("#titleinput").val(),
-			body: $("#bodyinput").val()
-		}
-	})
+			method: "POST",
+			url: "/Articles/" + Id,
+			data: {
+				title: $("#titleinput").val(),
+				body: $("#bodyinput").val()
+			}
+		})
 		.then(function (data) {
 			console.log(data);
 			$("#notes" + data._id).empty();
 		});
-
-
 	$("#titleinput").val("");
 	$("#bodyinput").val("");
 });

@@ -1,2 +1,1 @@
-# mongoScrape
-homework UoU Bootcamp 14
+Homework 14 - Mongo/Mongoose + Scraping

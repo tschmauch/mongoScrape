@@ -1,31 +1,27 @@
 var express = require("express");
 var bodyParser = require("body-parser");
-var logger = require("morgan");
 var mongoose = require("mongoose");
-
-
 var app = express();
 var port = process.env.port || 3000;
 
-app.use(logger("dev"));
-
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-app.use(express.static("public"));
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/games";
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
-var exphbs = require("express-handlebars");
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+var expressHandlebars = require("express-handlebars");
 
+app.engine("handlebars", expressHandlebars({defaultLayout: 'main'}));
+app.set("view", "handlebars");
 
-require("./controllers/scraper_controller.js")(app);
-
+require("./controller/controller.js")(app);
 app.listen(port, function() {
   console.log("App running on port " + port);
 });
